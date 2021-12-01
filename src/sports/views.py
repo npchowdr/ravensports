@@ -2,14 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import requests
 import json
+import datetime
 
 
 
 def home(request):
 
 #api request
-    date = "2021-11-30"
-    url = "https://api-nba-v1.p.rapidapi.com/games/date/{}".format(date)
+    today_date = datetime.date.today()
+    url = "https://api-nba-v1.p.rapidapi.com/games/live/"
    
     headers = {
     'x-rapidapi-host': "api-nba-v1.p.rapidapi.com",
@@ -21,6 +22,7 @@ def home(request):
         api = json.loads(api_request.content)
     except:
         api = "Error..."
+    
 
     return render(request,'index.html',{'api':api})
 
