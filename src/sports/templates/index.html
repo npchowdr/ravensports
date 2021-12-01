@@ -16,11 +16,12 @@
                       <div class="bg-holder d-none d-md-block bg-card z-index-1" style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
                       </div>
                       <!--/.bg-holder-->
-
+<!-- Today's games -->   
                       <div class="position-relative z-index-2">
                         <div>
-                          <h3 class="text-primary mb-1">Good Afternoon, Jonathan!</h3>
-                          <p>Here’s what happening with your store today </p>
+                            
+                          <h3 class="text-primary mb-1"> {{ api.api.results }} Games Today</h3>
+                
                         </div>
                         <div class="d-flex py-3">
                           <div class="pe-3">
@@ -70,92 +71,6 @@
                           </div>
                         </li>
                       </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-12">
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="card h-md-100 ecommerce-card-min-width">
-                        <div class="card-header pb-0">
-                          <h6 class="mb-0 mt-2 d-flex align-items-center">Weekly Sales<span class="ms-1 text-400" data-bs-toggle="tooltip" data-bs-placement="top" title="Calculated according to last week's sales"><span class="far fa-question-circle" data-fa-transform="shrink-1"></span></span></h6>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-end">
-                          <div class="row">
-                            <div class="col">
-                              <p class="font-sans-serif lh-1 mb-1 fs-2">$47K</p><span class="badge badge-soft-success rounded-pill fs--2">+3.5%</span>
-                            </div>
-                            <div class="col-auto ps-0">
-                              <div class="echart-bar-weekly-sales h-100 echart-bar-weekly-sales-smaller-width"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="card product-share-doughnut-width">
-                        <div class="card-header pb-0">
-                          <h6 class="mb-0 mt-2 d-flex align-items-center">Product Share</h6>
-                        </div>
-                        <div class="card-body d-flex flex-column justify-content-end">
-                          <div class="row align-items-end">
-                            <div class="col">
-                              <p class="font-sans-serif lh-1 mb-1 fs-2">34.6%</p><span class="badge badge-soft-success rounded-pill"><span class="fas fa-caret-up me-1"></span>3.5%</span>
-                            </div>
-                            <div class="col-auto ps-0">
-                              <canvas class="my-n5" id="marketShareDoughnut" width="112" height="112"></canvas>
-                              <p class="mb-0 text-center fs--2 mt-4 text-500">Target: <span class="text-800">55%</span></p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="card h-md-100 h-100">
-                        <div class="card-body">
-                          <div class="row h-100 justify-content-between g-0">
-                            <div class="col-5 col-sm-6 col-xxl pe-2">
-                              <h6 class="mt-1">Market Share</h6>
-                              <div class="fs--2 mt-3">
-                                <div class="d-flex flex-between-center mb-1">
-                                  <div class="d-flex align-items-center"><span class="dot bg-primary"></span><span class="fw-semi-bold">Falcon</span></div>
-                                  <div class="d-xxl-none">57%</div>
-                                </div>
-                                <div class="d-flex flex-between-center mb-1">
-                                  <div class="d-flex align-items-center"><span class="dot bg-info"></span><span class="fw-semi-bold">Sparrow</span></div>
-                                  <div class="d-xxl-none">20%</div>
-                                </div>
-                                <div class="d-flex flex-between-center mb-1">
-                                  <div class="d-flex align-items-center"><span class="dot bg-warning"></span><span class="fw-semi-bold">Phoenix</span></div>
-                                  <div class="d-xxl-none">22%</div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-auto position-relative">
-                              <div class="echart-product-share"></div>
-                              <div class="position-absolute top-50 start-50 translate-middle text-dark fs-2">26M</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="card">
-                        <div class="card-header pb-0">
-                          <h6 class="mb-0 mt-2 d-flex align-items-center">Total Order</h6>
-                        </div>
-                        <div class="card-body">
-                          <div class="row align-items-end">
-                            <div class="col">
-                              <p class="font-sans-serif lh-1 mb-1 fs-2">58.4K</p>
-                              <div class="badge badge-soft-primary rounded-pill fs--2"><span class="fas fa-caret-up me-1"></span>13.6%</div>
-                            </div>
-                            <div class="col-auto ps-0">
-                              <div class="total-order-ecommerce" data-echarts='{"series":[{"type":"line","data":[110,100,250,210,530,480,320,325]}],"grid":{"bottom":"-10px"}}'></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -708,50 +623,6 @@
               </div>
             </div>
             <div class="col-xxl-4 col-md-6">
-              <div class="card h-100">
-                <div class="card-header bg-light">
-                  <div class="row justify-content-between">
-                    <div class="col-auto">
-                      <h6>Returning Customer Rate</h6>
-                      <div class="d-flex align-items-center">
-                        <h4 class="text-primary mb-0">$59.09%</h4><span class="badge rounded-pill ms-3 badge-soft-primary"><span class="fas fa-caret-up"></span> 3.5%</span>
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <select class="form-select form-select-sm pe-4" id="select-returning-customer-month">
-                        <option value="0">Jan</option>
-                        <option value="1">Feb</option>
-                        <option value="2">Mar</option>
-                        <option value="3">Apr</option>
-                        <option value="4">May</option>
-                        <option value="5">Jun</option>
-                        <option value="6">Jul</option>
-                        <option value="7">Aug</option>
-                        <option value="8">Sep</option>
-                        <option value="9">Oct</option>
-                        <option value="10">Nov</option>
-                        <option value="11">Dec</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <!-- Find the JS file for the following chart at: src/js/charts/echarts/returning-customer-rate.js-->
-                  <!-- If you are not using gulp based workflow, you can find the transpiled code at: public/assets/js/theme.js-->
-                  <div class="echart-line-returning-customer-rate h-100" data-echart-responsive="true" data-options='{"target":"returning-customer-rate-footer","monthSelect":"select-returning-customer-month","optionOne":"newMonth","optionTwo":"returningMonth"}'></div>
-                </div>
-                <div class="card-footer border-top py-2">
-                  <div class="row align-items-center gx-0" id="returning-customer-rate-footer">
-                    <div class="col-auto me-2">
-                      <div class="btn btn-sm btn-text d-flex align-items-center p-0 shadow-none" id="newMonth"><span class="fas fa-circle text-primary fs--2 me-1"></span>New </div>
-                    </div>
-                    <div class="col-auto">
-                      <div class="btn btn-sm btn-text d-flex align-items-center p-0 shadow-none" id="returningMonth"><span class="fas fa-circle text-warning fs--2 me-1"></span>Returning </div>
-                    </div>
-                    <div class="col text-end"><a class="btn btn-link btn-sm px-0 fw-medium" href="#!">View report <span class="fas fa-chevron-right fs--2"></span></a></div>
-                  </div>
-                </div>
-              </div>
             </div>
             <div class="col-xxl-4 col-md-6">
               <div class="card h-100">
