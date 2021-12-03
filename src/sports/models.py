@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models.fields import CharField
-import requests
 
 
 class Team(models.Model):
@@ -17,3 +15,28 @@ class Team(models.Model):
 
       def __str__(self) -> str:
           return super().__str__()
+
+
+
+
+class Standings(models.Model):
+      teamId = models.IntegerField()
+      win = models.IntegerField()
+      loss = models.IntegerField()
+      lastTenWin = models.IntegerField()
+      lastTenLoss = models.IntegerField()
+      streak = models.IntegerField()
+      seasonYear = models.IntegerField()
+      winPercentage = models.FloatField()
+      homeWins = models.IntegerField()
+      homeLoss = models.IntegerField()
+      awayWins = models.IntegerField()
+      awayLoss = models.IntegerField()
+      winStreak = models.IntegerField()
+
+
+
+
+      def __str__(self) -> str:
+          return super().__str__()
+
