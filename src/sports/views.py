@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db import models
+from .models.player_per_game_stats import PlayerPerGameStats
+
 import requests
 import json
 import datetime
@@ -26,4 +29,8 @@ def home(request):
     except:
         api = "Error..."
 
-    return render(request, 'index.html', {'api': api})
+    #TODO - query db for player data
+    player_per_game = PlayerPerGameStats.objects.all()
+
+    #return render(request, 'index.html', {'api': api}) #, {'player_per_game': player_per_game}
+    return  render(request, 'index.html', {'player_per_game': player_per_game})

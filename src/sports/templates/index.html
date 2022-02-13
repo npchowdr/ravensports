@@ -17,11 +17,15 @@
                         <!--/.bg-holder-->
                         <!-- Today's games -->
                         <div class="position-relative z-index-2">
-                            <div>
-                                <h4 class="text-gray mb-1">
-                                    {% for game in api.api.games %} {{ game.vTeam.nickName}} @ {{ game.hTeam.nickName}}<br/> {% endfor %}
-                                </h4>
-                            </div>
+<!--                            <div>-->
+<!--                                <h4 class="text-gray mb-1">-->
+<!--                                    {% for game in api.api.games %} {{ game.vTeam.nickName}} @ {{ game.hTeam.nickName}}<br/> {% endfor %}-->
+<!--                                </h4>-->
+<!--                            </div>-->
+                                <h1>Player Per Game Stats</h1>
+                                    <h4 class="text-gray mb-1">
+                                      {% for player in player_per_game %} {{ player.Player}} - {{player.Points}}<br/> {% endfor %}
+                                    </h4>
                             <div class="d-flex py-3">
                             </div>
                         </div>
