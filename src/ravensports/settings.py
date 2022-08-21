@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sports'
+    'sports',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'admin123',
-        'HOST': 'ravensports-nba.cubalvvpqhgx.us-east-1.rds.amazonaws.com',
+        'HOST': 'database-2.cubalvvpqhgx.us-east-1.rds.amazonaws.com',
         'PORT': '5432'
 
     }

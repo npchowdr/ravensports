@@ -1,0 +1,22 @@
+from django.db import models
+
+class PlayoffPlayerAdvancedStats(models.Model):
+    Rank = models.IntegerField()
+    Player = models.CharField(max_length=100)
+    Games = models.IntegerField()
+    GamesPlayed = models.IntegerField()
+    MinutesPlayed = models.FloatField()
+    TrueShootingPercentage = models.FloatField(null=True)
+    EffectiveFieldGoalPercentage = models.FloatField(null=True)
+    OffensiveReboundPercentage = models.FloatField(null=True)
+    DefensiveReboundPercentage = models.FloatField(null=True)
+    TotalReboundPercentage = models.FloatField(null=True)
+    AssistPercentage = models.FloatField(null=True)
+    StealPercentage = models.FloatField(null=True)
+    BlockPercentage = models.FloatField(null=True)
+    TurnoverPercentage = models.FloatField(null=True)
+    UsagePercentage = models.FloatField(null=True)
+    OffensiveRating = models.FloatField(null=True)
+    DefensiveRating = models.FloatField(null=True)
+    GameScore = models.FloatField(null=True)
+    Year = models.IntegerField()
