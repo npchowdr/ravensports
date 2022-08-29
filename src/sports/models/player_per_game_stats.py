@@ -32,3 +32,4 @@ class PlayerPerGameStats(models.Model):
     PersonalFouls = models.FloatField()
     Points = models.FloatField()
     Year = models.IntegerField()
+    objects = models.Manager()

@@ -1,0 +1,38 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<h1>Player Stats</h1>
+<h2>{{player_stats.Player}}</h2>
+{% for season in player_stats %}
+
+    {{season.Year}}
+    {{season.Age}}
+    {{season.Games}}
+    {{season.GamesStarted}}
+    {{season.MinutesPlayed}}
+    {{season.FieldGoalsMade}}
+    {{season.FieldGoalsAttempted}}
+    {{season.FieldGoalPercentage}}
+    {{season.ThreePointersMade}}
+    {{season.ThreePointersAttempted}}
+    {{season.ThreePointPercentage}}
+    {{season.TwoPointersMade}}
+    {{season.TwoPointersAttempted}}
+    {{season.TwoPointPercentage}}
+    {{season.EffectiveFieldGoalPercentage}}
+    {{season.FreeThrowsMade}}
+    {{season.FreeThrowsAttempted}}
+    {{season.FreeThrowPercentage}}
+    {{season.OffensiveRebounds}}
+    {{season.DefensiveRebounds}}
+    {{season.TotalRebounds}}
+    {{season.Assists}}
+    {{season.Steals}}
+    {{season.Blocks}}
+    {{season.Turnovers}}
+    {{season.PersonalFouls}}
+    {{season.Points}}
+    <br>
+
+{% endfor %}
+
+{% endblock %}

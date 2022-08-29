@@ -3,30 +3,38 @@ from django.http import HttpResponse
 import requests
 import json
 import datetime
-
-import datetime
-
-now = datetime.datetime.now()
+from .models import PlayerPerGameStats, PlayerAdvancedStats, PlayerPer100Stats
 
 def home(request):
-
-#api request
-    today_date = datetime.date.today()
-    url = "https://api-nba-v1.p.rapidapi.com/games/date/{}".format(today_date)
+    #api request
+    #today_date = datetime.date.today()
+    #url = "https://api-nba-v1.p.rapidapi.com/games/date/{}".format(today_date)
+    url = "https://free-nba.p.rapidapi.com/games"
 
     headers = {
-    'x-rapidapi-host': "api-nba-v1.p.rapidapi.com",
-    'x-rapidapi-key': "17c670de23mshfd6cbf40f8dcb0ap1d1114jsn76ac1068f254"
+    'x-rapidapi-host': "free-nba.p.rapidapi.com",
+    'x-rapidapi-key': "30c951b069msh648c965fd6a0c86p1f0812jsnc4bc8a94668d"
     }
-   
-    api_request = requests.get(url, headers=headers) 
+
+    api_request = requests.get(url, headers=headers)
+    #response = requests.request("GET", url, headers=headers, params=querystring)
 
     try:
         api = json.loads(api_request.content)
     except:
         api = "Error..."
-    
-    return render(request,'index.html',{'api':api})
+
+    return render(request, 'index.html', {'api': api})
+# -------------------
+
+def player_stats(request):
+    # get all
+    # all_per_game_stats = PlayerPerGameStats.objects.all()
+
+    player_stats = PlayerPerGameStats.objects.filter(Player='Kobe Bryant*')  # HOFers have * next to name
+
+    return render(request, 'table.html', {'player_stats': player_stats})
+
 
 
 
