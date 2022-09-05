@@ -1,38 +1,89 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 
+<style>
+table, th, td {
+  border:1px solid black;
+}
+th, td{
+  padding:3px;
+}
+</style>
+
 <h1>Player Stats</h1>
-<h2>{{player_stats.Player}}</h2>
-{% for season in player_stats %}
 
-    {{season.Year}}
-    {{season.Age}}
-    {{season.Games}}
-    {{season.GamesStarted}}
-    {{season.MinutesPlayed}}
-    {{season.FieldGoalsMade}}
-    {{season.FieldGoalsAttempted}}
-    {{season.FieldGoalPercentage}}
-    {{season.ThreePointersMade}}
-    {{season.ThreePointersAttempted}}
-    {{season.ThreePointPercentage}}
-    {{season.TwoPointersMade}}
-    {{season.TwoPointersAttempted}}
-    {{season.TwoPointPercentage}}
-    {{season.EffectiveFieldGoalPercentage}}
-    {{season.FreeThrowsMade}}
-    {{season.FreeThrowsAttempted}}
-    {{season.FreeThrowPercentage}}
-    {{season.OffensiveRebounds}}
-    {{season.DefensiveRebounds}}
-    {{season.TotalRebounds}}
-    {{season.Assists}}
-    {{season.Steals}}
-    {{season.Blocks}}
-    {{season.Turnovers}}
-    {{season.PersonalFouls}}
-    {{season.Points}}
-    <br>
+<form class="d-flex" method=POST action="{% url 'player_stats' %}">
+    {% csrf_token %}
+    <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
+    <button type="submit">Search</button>
+</form>
 
-{% endfor %}
+{% if searched %}
+    <h2>You Searched For...</h2>
+    <h2>{{player}}</h2>
+{% endif %}
+
+<table>
+    <tr>
+        <th>Year</th>
+        <th>Age</th>
+        <th>GP</th>
+        <th>GS</th>
+        <th>MP</th>
+        <th>FGM</th>
+        <th>FGA</th>
+        <th>FG%</th>
+        <th>3PM</th>
+        <th>3PA</th>
+        <th>3P%</th>
+        <th>2PM</th>
+        <th>2PA</th>
+        <th>2P%</th>
+        <th>eFG%</th>
+        <th>FTM</th>
+        <th>FTA</th>
+        <th>FT%</th>
+        <th>ORB</th>
+        <th>DRB</th>
+        <th>TRB</th>
+        <th>AST</th>
+        <th>STL</th>
+        <th>BLK</th>
+        <th>TO</th>
+        <th>PF</th>
+        <th>PTS</th>
+    </tr>
+    {% for season in player_stats_object %}
+    <tr>
+        <td>{{season.Year}}</td>
+        <td>{{season.Age}}</td>
+        <td>{{season.GamesPlayed}}</td>
+        <td>{{season.GamesStarted}}</td>
+        <td>{{season.MinutesPlayed}}</td>
+        <td>{{season.FieldGoalsMade}}</td>
+        <td>{{season.FieldGoalsAttempted}}</td>
+        <td>{{season.FieldGoalPercentage}}</td>
+        <td>{{season.ThreePointersMade}}</td>
+        <td>{{season.ThreePointersAttempted}}</td>
+        <td>{{season.ThreePointPercentage}}</td>
+        <td>{{season.TwoPointersMade}}</td>
+        <td>{{season.TwoPointersAttempted}}</td>
+        <td>{{season.TwoPointPercentage}}</td>
+        <td>{{season.EffectiveFieldGoalPercentage}}</td>
+        <td>{{season.FreeThrowsMade}}</td>
+        <td>{{season.FreeThrowsAttempted}}</td>
+        <td>{{season.FreeThrowPercentage}}</td>
+        <td>{{season.OffensiveRebounds}}</td>
+        <td>{{season.DefensiveRebounds}}</td>
+        <td>{{season.TotalRebounds}}</td>
+        <td>{{season.Assists}}</td>
+        <td>{{season.Steals}}</td>
+        <td>{{season.Blocks}}</td>
+        <td>{{season.Turnovers}}</td>
+        <td>{{season.PersonalFouls}}</td>
+        <td>{{season.Points}}</td>
+    </tr>
+
+    {% endfor %}
+</table>
 
 {% endblock %}

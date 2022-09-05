@@ -30,10 +30,19 @@ def home(request):
 def player_stats(request):
     # get all
     # all_per_game_stats = PlayerPerGameStats.objects.all()
+    player = 'Kobe Bryant*'
+    player_stats_object = PlayerPerGameStats.objects.filter(Player=player)  # HOFers have * next to name
 
-    player_stats = PlayerPerGameStats.objects.filter(Player='Kobe Bryant*')  # HOFers have * next to name
+    if request.method == "POST":
+        searched = request.POST.get('searched')
+        player = searched
+        player_stats_object = PlayerPerGameStats.objects.filter(Player=searched)
 
-    return render(request, 'table.html', {'player_stats': player_stats})
+        return render(request, 'table.html', {'player_stats_object': player_stats_object, 'player': player,
+                                              'searched': searched})
+
+    else: #default page render
+        return render(request, 'table.html', {'player_stats_object': player_stats_object, 'player': player})
 
 
 
