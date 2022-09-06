@@ -9,9 +9,9 @@ th, td{
 }
 </style>
 
-<h1>Player Stats</h1>
+<h1>Player Per Game Stats</h1>
 
-<form class="d-flex" method=POST action="{% url 'player_stats' %}">
+<form class="d-flex" method=POST action="{% url 'player_per_game_stats' %}">
     {% csrf_token %}
     <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
     <button type="submit">Search</button>
@@ -19,8 +19,10 @@ th, td{
 
 {% if searched %}
     <h2>You Searched For...</h2>
-    <h2>{{player}}</h2>
+{% else %}
+    <h2>Search For A Player...</h2>
 {% endif %}
+<h2>{{player}}</h2>
 
 <table>
     <tr>

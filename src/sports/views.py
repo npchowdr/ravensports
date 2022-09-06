@@ -27,7 +27,7 @@ def home(request):
     return render(request, 'index.html', {'api': api})
 # -------------------
 
-def player_stats(request):
+def player_per_game_stats(request):
     # get all
     # all_per_game_stats = PlayerPerGameStats.objects.all()
     player = 'Kobe Bryant*'
@@ -35,15 +35,27 @@ def player_stats(request):
 
     if request.method == "POST":
         searched = request.POST.get('searched')
-        player = searched
         player_stats_object = PlayerPerGameStats.objects.filter(Player=searched)
 
-        return render(request, 'table.html', {'player_stats_object': player_stats_object, 'player': player,
+        return render(request, 'table.html', {'player_stats_object': player_stats_object, 'player': searched,
                                               'searched': searched})
 
     else: #default page render
         return render(request, 'table.html', {'player_stats_object': player_stats_object, 'player': player})
 
+def player_per_100_stats(request):
+    player = 'Kobe Bryant*'
+    player_stats_object = PlayerPer100Stats.objects.filter(Player=player)  # HOFers have * next to name
+
+    if request.method == "POST":
+        searched = request.POST.get('searched')
+        player_stats_object = PlayerPer100Stats.objects.filter(Player=searched)
+
+        return render(request, 'player_per_100.html', {'player_stats_object': player_stats_object, 'player': searched,
+                                              'searched': searched})
+
+    else: #default page render
+        return render(request, 'player_per_100.html', {'player_stats_object': player_stats_object, 'player': player})
 
 
 

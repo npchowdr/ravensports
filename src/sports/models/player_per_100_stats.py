@@ -31,5 +31,6 @@ class PlayerPer100Stats(models.Model):
     PersonalFouls = models.FloatField(null=True)
     Points = models.FloatField(null=True)
     OffensiveRating = models.IntegerField(null=True)
-    DefensiveRatings = models.IntegerField(null=True)
+    DefensiveRating = models.IntegerField(null=True)
     Year = models.IntegerField()
+    objects = models.Manager()
