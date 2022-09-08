@@ -29,3 +29,4 @@ class PlayerAdvancedStats(models.Model):
     BoxPlusMinus = models.FloatField(null=True)
     ValueOverReplacementPlayer = models.FloatField(null=True)
     Year = models.IntegerField()
+    objects = models.Manager()

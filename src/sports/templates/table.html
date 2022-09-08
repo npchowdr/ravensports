@@ -17,6 +17,9 @@ th, td{
     <button type="submit">Search</button>
 </form>
 
+<a href="http://127.0.0.1:8000/player_per_100_stats">Per 100</a>
+<a href="http://127.0.0.1:8000/player_advanced_stats">Advanced</a>
+
 {% if searched %}
     <h2>You Searched For...</h2>
 {% else %}
@@ -28,6 +31,8 @@ th, td{
     <tr>
         <th>Year</th>
         <th>Age</th>
+        <th>POS</th>
+        <th>Tm</th>
         <th>GP</th>
         <th>GS</th>
         <th>MP</th>
@@ -58,6 +63,8 @@ th, td{
     <tr>
         <td>{{season.Year}}</td>
         <td>{{season.Age}}</td>
+        <td>{{season.Position}}</td>
+        <td>{{season.Team}}</td>
         <td>{{season.GamesPlayed}}</td>
         <td>{{season.GamesStarted}}</td>
         <td>{{season.MinutesPlayed}}</td>

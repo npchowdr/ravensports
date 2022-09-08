@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+th, td{
+  padding:3px;
+}
+</style>
+
+<h1>Player Advanced Stats</h1>
+
+<form class="d-flex" method=POST action="{% url 'player_advanced_stats' %}">
+    {% csrf_token %}
+    <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
+    <button type="submit">Search</button>
+</form>
+
+<a href="http://127.0.0.1:8000/player_per_game_stats">Per Game</a>
+<a href="http://127.0.0.1:8000/player_per_100_stats">Per 100</a>
+
+{% if searched %}
+    <h2>You Searched For...</h2>
+{% else %}
+    <h2>Search For A Player...</h2>
+{% endif %}
+<h2>{{player}}</h2>
+
+<table>
+    <tr>
+        <th>Year</th>
+        <th>Age</th>
+        <th>POS</th>
+        <th>Tm</th>
+        <th>GP</th>
+        <th>MP</th>
+        <th>PER</th>
+        <th>TS%</th>
+        <th>3PAr</th>
+        <th>FTr</th>
+        <th>ORB%</th>
+        <th>DRB%</th>
+        <th>TRB%</th>
+        <th>AST%</th>
+        <th>STL%</th>
+        <th>BLK%</th>
+        <th>TOV%</th>
+        <th>USG%</th>
+        <th>OWS</th>
+        <th>DWS</th>
+        <th>WS</th>
+        <th>WS/48</th>
+        <th>OBPM</th>
+        <th>DBPM</th>
+        <th>BPM</th>
+        <th>VORP</th>
+    </tr>
+    {% for season in player_stats_object %}
+    <tr>
+        <td>{{season.Year}}</td>
+        <td>{{season.Age}}</td>
+        <td>{{season.Position}}</td>
+        <td>{{season.Team}}</td>
+        <td>{{season.GamesPlayed}}</td>
+        <td>{{season.MinutesPlayed}}</td>
+        <td>{{season.PlayerEfficiencyRating}}</td>
+        <td>{{season.TrueShootingPercentage}}</td>
+        <td>{{season.ThreePointAttemptRate}}</td>
+        <td>{{season.FreeThrowAttemptRate}}</td>
+        <td>{{season.OffensiveReboundPercentage}}</td>
+        <td>{{season.DefensiveReboundPercentage}}</td>
+        <td>{{season.TotalReboundPercentage}}</td>
+        <td>{{season.AssistPercentage}}</td>
+        <td>{{season.StealPercentage}}</td>
+        <td>{{season.BlockPercentage}}</td>
+        <td>{{season.TurnoverPercentage}}</td>
+        <td>{{season.UsagePercentage}}</td>
+        <td>{{season.OffensiveWinShares}}</td>
+        <td>{{season.DefensiveWinShares}}</td>
+        <td>{{season.WinShares}}</td>
+        <td>{{season.WinSharesPer48}}</td>
+        <td>{{season.OffensiveBoxPlusMinus}}</td>
+        <td>{{season.DefensiveBoxPlusMinus}}</td>
+        <td>{{season.BoxPlusMinus}}</td>
+        <td>{{season.ValueOverReplacementPlayer}}</td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+{% endblock %}

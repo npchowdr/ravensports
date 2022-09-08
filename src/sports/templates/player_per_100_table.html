@@ -17,6 +17,9 @@ th, td{
     <button type="submit">Search</button>
 </form>
 
+<a href="http://127.0.0.1:8000/player_per_game_stats">Per Game</a>
+<a href="http://127.0.0.1:8000/player_advanced_stats">Advanced</a>
+
 {% if searched %}
     <h2>You Searched For...</h2>
 {% else %}
@@ -28,6 +31,8 @@ th, td{
     <tr>
         <th>Year</th>
         <th>Age</th>
+        <th>POS</th>
+        <th>Tm</th>
         <th>GP</th>
         <th>GS</th>
         <th>MP</th>
@@ -40,7 +45,6 @@ th, td{
         <th>2PM</th>
         <th>2PA</th>
         <th>2P%</th>
-        <th>eFG%</th>
         <th>FTM</th>
         <th>FTA</th>
         <th>FT%</th>
@@ -53,11 +57,15 @@ th, td{
         <th>TO</th>
         <th>PF</th>
         <th>PTS</th>
+        <th>ORTG</th>
+        <th>DRTG</th>
     </tr>
     {% for season in player_stats_object %}
     <tr>
         <td>{{season.Year}}</td>
         <td>{{season.Age}}</td>
+        <td>{{season.Position}}</td>
+        <td>{{season.Team}}</td>
         <td>{{season.GamesPlayed}}</td>
         <td>{{season.GamesStarted}}</td>
         <td>{{season.MinutesPlayed}}</td>
@@ -70,7 +78,6 @@ th, td{
         <td>{{season.TwoPointersMade}}</td>
         <td>{{season.TwoPointersAttempted}}</td>
         <td>{{season.TwoPointPercentage}}</td>
-        <td>{{season.EffectiveFieldGoalPercentage}}</td>
         <td>{{season.FreeThrowsMade}}</td>
         <td>{{season.FreeThrowsAttempted}}</td>
         <td>{{season.FreeThrowPercentage}}</td>
@@ -83,6 +90,8 @@ th, td{
         <td>{{season.Turnovers}}</td>
         <td>{{season.PersonalFouls}}</td>
         <td>{{season.Points}}</td>
+        <td>{{season.OffensiveRating}}</td>
+        <td>{{season.DefensiveRating}}</td>
     </tr>
 
     {% endfor %}
