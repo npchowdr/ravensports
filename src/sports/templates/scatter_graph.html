@@ -87,9 +87,13 @@ const render = data => {
       .attr('class', 'title')
       .attr('y', -5)
       .attr('x', width/2)
-
       .text(title);
 }
+
+// player_name = {{player}}.replace(" ", "%20")
+// console.log(player_name)
+// api_url = "http://127.0.0.1:8000/api/get_player_per_game_stats_list/" + player
+// console.log(api_url)
 
 d3.json("http://127.0.0.1:8000/api/get_player_per_game_stats_list/Anthony%20Davis").then(function(data){
 
