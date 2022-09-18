@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import requests
 import json
 import datetime
 from .models import PlayerPerGameStats, PlayerAdvancedStats, PlayerPer100Stats
+from .serializers import PlayerPerGameStatsSerializer
+from rest_framework.decorators import api_view
 
 def home(request):
     #api request
@@ -25,8 +27,8 @@ def home(request):
         api = "Error..."
 
     return render(request, 'index.html', {'api': api})
-# -------------------
 
+# -------------------
 def player_per_game_stats(request):
     # get all
     # all_per_game_stats = PlayerPerGameStats.objects.all()
@@ -43,6 +45,7 @@ def player_per_game_stats(request):
     else:
         return render(request, 'table.html', {'player_stats_object': player_stats_object, 'player': player})
 
+# -------------------
 def player_per_100_stats(request):
     player = 'Kobe Bryant*'
     player_stats_object = PlayerPer100Stats.objects.filter(Player=player)  # HOFers have * next to name
@@ -58,6 +61,7 @@ def player_per_100_stats(request):
         return render(request, 'player_per_100_table.html', {'player_stats_object': player_stats_object,
                                                              'player': player})
 
+# -------------------
 def player_advanced_stats(request):
     player = 'Kobe Bryant*'
     player_stats_object = PlayerAdvancedStats.objects.filter(Player=player)  # HOFers have * next to name
@@ -73,4 +77,25 @@ def player_advanced_stats(request):
         return render(request, 'player_advanced_table.html', {'player_stats_object': player_stats_object,
                                                              'player': player})
 
+# -------------------
+def scatter_graph(request):
+    player = 'Kobe Bryant*'
+    return render(request, 'scatter_graph.html', {'player': player})
 
+# -------------------
+def get_all_players_per_game_stats_list(request):
+    try:
+        player_per_game_objects = PlayerPerGameStats.objects.all()
+    except PlayerPerGameStats.DoesNotExist:
+        return HttpResponse(status=404)
+
+    serializer = PlayerPerGameStatsSerializer(player_per_game_objects, many=True)
+
+    return JsonResponse(serializer.data)
+
+# -------------------
+def get_player_per_game_stats_list(request, player='Kobe Bryant*'):
+    player_per_game_objects = PlayerPerGameStats.objects.filter(Player=player)
+    serializer = PlayerPerGameStatsSerializer(player_per_game_objects, many=True)
+    return JsonResponse({'player_per_game_stats': serializer.data})
+    

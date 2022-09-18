@@ -30,3 +30,6 @@ class PlayerAdvancedStats(models.Model):
     ValueOverReplacementPlayer = models.FloatField(null=True)
     Year = models.IntegerField()
     objects = models.Manager()
+
+    def __str__(self):
+        return self.Player + ' - ' + str(self.Year)

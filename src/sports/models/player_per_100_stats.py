@@ -34,3 +34,6 @@ class PlayerPer100Stats(models.Model):
     DefensiveRating = models.IntegerField(null=True)
     Year = models.IntegerField()
     objects = models.Manager()
+
+    def __str__(self):
+        return self.Player + ' - ' + str(self.Year)

@@ -33,3 +33,6 @@ class PlayerPerGameStats(models.Model):
     Points = models.FloatField()
     Year = models.IntegerField()
     objects = models.Manager()
+
+    def __str__(self):
+        return self.Player + ' - ' + str(self.Year)
