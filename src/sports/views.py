@@ -79,8 +79,13 @@ def player_advanced_stats(request):
 
 # -------------------
 def scatter_graph(request):
-    player = 'Kobe Bryant*'
-    return render(request, 'scatter_graph.html', {'player': player})
+    player = 'Anthony Davis'
+
+    if request.method == "POST":
+        searched = request.POST.get('searched')
+        return render(request, 'scatter_graph.html', {'player': searched, 'searched': searched})
+    else:
+        return render(request, 'scatter_graph.html', {'player': player})
 
 # -------------------
 def get_all_players_per_game_stats_list(request):
