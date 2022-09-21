@@ -18,14 +18,40 @@
 <div id="my_dataviz"></div>
 <script>
 
+var data_arr;
+
 var player_name = document.getElementById('player_header').innerHTML;
 console.log(player_name)
 api_url = "http://127.0.0.1:8000/api/get_player_per_game_stats_list/" + player_name.replace(" ", "%20")
 console.log(api_url)
 
-const render = data => {
+var stat_array = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //Rebounds needs to be TotalRebounds
 
-  const title = player_name + ' Points per Game by Year'
+
+var select = d3.select('body')
+  .append('select')
+  	.attr('class','select')
+    .on('change',onchange)
+
+var options = select
+  .selectAll('option')
+	.data(stat_array).enter()
+	.append('option')
+		.text(function (d) { return d; });
+
+function onchange() {
+	selectValue = d3.select('select').property('value')
+
+  // remove old graph
+  var s = d3.selectAll('svg');
+  s.remove()  
+
+  render(data_arr, selectValue)
+};
+
+const render = (data, stat1) => {
+
+  const title = player_name + ' ' + stat1 + ' per Game by Year'
 
   var margin = {top: 20, right: 20, bottom: 50, left: 50},
     width = 960 - margin.left - margin.right,
@@ -47,7 +73,7 @@ const render = data => {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   const xValue = d => d.Year;
-  const yValue = d => d.Points;
+  const yValue = d => d[stat1];
 
   // Add X axis
     var xScale = d3.scaleLinear()
@@ -60,7 +86,7 @@ const render = data => {
 
     // Add Y axis
     var yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.Points) + 2])
+        .domain([0, d3.max(data, d => d[stat1]) + 2])
         .range([ height, 0]);
     svg.append("g")
         .call(d3.axisLeft(yScale));
@@ -84,17 +110,14 @@ const render = data => {
 }
 
 d3.json(api_url).then(function(data){
-  var data_arr = data.player_per_game_stats
+  data_arr = data.player_per_game_stats
   console.log(data_arr)
 
-  // data_arr.forEach(d => {
-  //   d.Points = +d.Points
-  //   d.Year = +d.Year
-  // });
-
-  render(data_arr);
+  render(data_arr, stat_array[0]);
     
 });
+
+
 
 </script>
 </body>
