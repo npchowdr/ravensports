@@ -19,37 +19,61 @@
 <script>
 
 var data_arr;
+var curr_stat1 = "Points";
+var curr_stat2 = "Year";
 
 var player_name = document.getElementById('player_header').innerHTML;
-console.log(player_name)
 api_url = "http://127.0.0.1:8000/api/get_player_per_game_stats_list/" + player_name.replace(" ", "%20")
-console.log(api_url)
 
-var stat_array = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //Rebounds needs to be TotalRebounds
+var stat_array_y_axis = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
+var stat_array_x_axis = ["Year", "Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
 
-
-var select = d3.select('body')
+var select_stat1 = d3.select('body')
   .append('select')
   	.attr('class','select')
-    .on('change',onchange)
+    .on('change',onChangeStat1)
 
-var options = select
+var options1 = select_stat1
   .selectAll('option')
-	.data(stat_array).enter()
+	.data(stat_array_y_axis).enter()
 	.append('option')
 		.text(function (d) { return d; });
 
-function onchange() {
-	selectValue = d3.select('select').property('value')
+function onChangeStat1() {
+	curr_stat1 = d3.select('select').property('value')
+  //console.log(curr_stat1)
 
   // remove old graph
   var s = d3.selectAll('svg');
   s.remove()  
 
-  render(data_arr, selectValue)
+  render(data_arr, curr_stat1, curr_stat2)
 };
 
-const render = (data, stat1) => {
+var select_stat2 = d3.select('body')
+  .append('select')
+  	.attr('class','select')
+    .on('change',onChangeStat2)
+
+var options2 = select_stat2
+  .selectAll('option')
+	.data(stat_array_x_axis).enter()
+	.append('option')
+		.text(function (d) { return d; });
+
+function onChangeStat2() {
+  selections = d3.selectAll('select').nodes()
+  second_select = selections[1]
+	curr_stat2 = second_select.value //get value from second select node
+
+  // remove old graph
+  var s = d3.selectAll('svg');
+  s.remove()  
+
+  render(data_arr, curr_stat1, curr_stat2)
+};
+
+const render = (data, stat1, stat2) => {
 
   const title = player_name + ' ' + stat1 + ' per Game by Year'
 
@@ -72,10 +96,11 @@ const render = (data, stat1) => {
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  const xValue = d => d.Year;
+  const xValue = d => d[stat2];
   const yValue = d => d[stat1];
 
   // Add X axis
+  if(stat2 == "Year"){
     var xScale = d3.scaleLinear()
         //.domain(d3.extent(data, xValue))
         .domain([d3.min(data, d => d.Year) - 1, d3.max(data, d => d.Year)])
@@ -83,6 +108,15 @@ const render = (data, stat1) => {
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+  } else {
+    var xScale = d3.scaleLinear()
+        //.domain(d3.extent(data, xValue))
+        .domain([0, d3.max(data, d => d[stat1]) + 2])
+        .range([0, width]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+  }
 
     // Add Y axis
     var yScale = d3.scaleLinear()
@@ -113,7 +147,7 @@ d3.json(api_url).then(function(data){
   data_arr = data.player_per_game_stats
   console.log(data_arr)
 
-  render(data_arr, stat_array[0]);
+  render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default
     
 });
 
