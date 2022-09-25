@@ -16,3 +16,17 @@ class PlayerPerGameStatsSerializer(serializers.ModelSerializer):
 
     def get_stats(self, data):
         return PlayerPerGameStats.objects.all()
+
+
+class PlayerAdvancedStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlayerAdvancedStats
+        fields = ['id', 'Rank', 'Player', 'Position', 'Age', 'Team', 'GamesPlayed', 'MinutesPlayed',
+        'PlayerEfficiencyRating', 'TrueShootingPercentage', 'ThreePointAttemptRate', 'FreeThrowAttemptRate',
+        'OffensiveReboundPercentage', 'DefensiveReboundPercentage', 'TotalReboundPercentage', 'AssistPercentage',
+        'StealPercentage', 'BlockPercentage', 'TurnoverPercentage', 'UsagePercentage', 'OffensiveWinShares',
+        'DefensiveWinShares', 'WinShares', 'WinSharesPer48', 'OffensiveBoxPlusMinus', 'DefensiveBoxPlusMinus',
+        'ValueOverReplacementPlayer', 'Year']
+
+    def get_stats(self, data):
+        return PlayerAdvancedStats.objects.all()

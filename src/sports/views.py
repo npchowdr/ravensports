@@ -4,7 +4,7 @@ import requests
 import json
 import datetime
 from .models import PlayerPerGameStats, PlayerAdvancedStats, PlayerPer100Stats
-from .serializers import PlayerPerGameStatsSerializer
+from .serializers import PlayerPerGameStatsSerializer, PlayerAdvancedStatsSerializer
 from rest_framework.decorators import api_view
 
 def home(request):
@@ -88,6 +88,16 @@ def scatter_graph(request):
         return render(request, 'scatter_graph.html', {'player': player})
 
 # -------------------
+def season_scatter_graph(request):
+    season = 2021
+
+    if request.method == "POST":
+        searched = request.POST.get('searched')
+        return render(request, 'season_scatter_graph.html', {'season': searched, 'searched': searched})
+    else:
+        return render(request, 'season_scatter_graph.html', {'season': season})
+
+# -------------------
 def get_all_players_per_game_stats_list(request):
     try:
         player_per_game_objects = PlayerPerGameStats.objects.all()
@@ -96,11 +106,26 @@ def get_all_players_per_game_stats_list(request):
 
     serializer = PlayerPerGameStatsSerializer(player_per_game_objects, many=True)
 
-    return JsonResponse(serializer.data)
+    return JsonResponse(serializer.data, safe=False)
 
 # -------------------
 def get_player_per_game_stats_list(request, player='Kobe Bryant*'):
     player_per_game_objects = PlayerPerGameStats.objects.filter(Player=player)
     serializer = PlayerPerGameStatsSerializer(player_per_game_objects, many=True)
     return JsonResponse({'player_per_game_stats': serializer.data})
+
+# -------------------
+# @param stats_type can be 'advanced', 'per game', or 'per 100'
+def get_all_players_stats_for_season_list(request, season=2021):
+
+    player_advanced_stats_object = PlayerAdvancedStats.objects.filter(Year=season)
+    player_per_game_stats_object = PlayerPerGameStats.objects.filter(Year=season)
+    per_game_serializer = PlayerPerGameStatsSerializer(player_per_game_stats_object, many=True)
+    advanced_serializer = PlayerAdvancedStatsSerializer(player_advanced_stats_object, many=True)
+
+    return JsonResponse({'player_per_game_stats': per_game_serializer.data,
+                        'player_advanced_stats': advanced_serializer.data})
+       
+   
+    
     

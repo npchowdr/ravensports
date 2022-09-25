@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-
+  .label{
+    font: 10px sans-serif;
+  }
 </style>
 <body>
 
@@ -41,7 +43,6 @@ var options1 = select_stat1
 
 function onChangeStat1() {
 	curr_stat1 = d3.select('select').property('value')
-  //console.log(curr_stat1)
 
   // remove old graph
   var s = d3.selectAll('svg');
@@ -104,10 +105,11 @@ const render = (data, stat1, stat2) => {
     var xScale = d3.scaleLinear()
         //.domain(d3.extent(data, xValue))
         .domain([d3.min(data, d => d.Year) - 1, d3.max(data, d => d.Year)])
-        .range([0, width]);
+        .range([0, width-25]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+      
   } else {
     var xScale = d3.scaleLinear()
         //.domain(d3.extent(data, xValue))
@@ -135,17 +137,28 @@ const render = (data, stat1, stat2) => {
         .attr("cy", d => yScale(yValue(d)))
         .attr("r", 5)
         .style("fill", "#000000")
+ 
+    // Add label for dots
+    data.forEach ( d => {
+      svg.append("text")
+      .attr('class', 'label')
+      .attr('x', xScale(xValue(d))-25)
+      .attr('y', yScale(yValue(d))+20)
 
+      .text(xValue(d) + ", " + yValue(d));
+    })
+   
+    // Add Graph title
     svg.append('text')
       .attr('class', 'title')
-      .attr('y', -5)
+      .attr('y', -10)
       .attr('x', width/2)
       .text(title);
 }
 
 d3.json(api_url).then(function(data){
   data_arr = data.player_per_game_stats
-  console.log(data_arr)
+  //console.log(data_arr)
 
   render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default
     
