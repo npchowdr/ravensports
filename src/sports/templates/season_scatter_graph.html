@@ -29,7 +29,7 @@ api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/" + + sea
 console.log(api_url)
 
 var stat_array_y_axis = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
-var stat_array_x_axis = ["Year", "Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
+var stat_array_x_axis = ["Assists", "Points", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
 
 var select_stat1 = d3.select('body')
   .append('select')
@@ -145,7 +145,7 @@ const render = (data, stat1, stat2) => {
       .attr('class', 'label')
       .attr('x', xScale(xValue(d))-25)
       .attr('y', yScale(yValue(d))+20)
-      .text(xValue(d) + ", " + yValue(d));
+      .text(d['Player']);//.text(xValue(d) + ", " + yValue(d));
     })
    
     // Add Graph title
