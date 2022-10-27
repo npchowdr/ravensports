@@ -53,9 +53,12 @@ th, td{
         <th>AST</th>
         <th>STL</th>
         <th>BLK</th>
+        <th>BLKA</th>
         <th>TO</th>
         <th>PF</th>
+        <th>PFD</th>
         <th>PTS</th>
+        <th>+/-</th>
     </tr>
     {% for season in stat_list %}
     <tr>
@@ -82,9 +85,12 @@ th, td{
         <td>{{season.assists}}</td>
         <td>{{season.steals}}</td>
         <td>{{season.blocks}}</td>
+        <td>{{season.blocks_against}}</td>
         <td>{{season.turnovers}}</td>
         <td>{{season.personalFouls}}</td>
+        <td>{{season.personalFoulsDrawn}}</td>
         <td>{{season.points}}</td>
+        <td>{{season.plusMinus}}</td>
     </tr>
 
     {% endfor %}
