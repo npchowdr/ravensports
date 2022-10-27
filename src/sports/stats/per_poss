@@ -1,0 +1,36 @@
+from mimetypes import init
+from sports.models import PlayerRegularSeasonTotals
+
+class PerPossession:
+    def __init__(self, totals: PlayerRegularSeasonTotals):
+        self.player = totals.playerId
+        self.teamId = totals.teamId
+        self.season = totals.season
+        self.age = totals.age
+        self.gamesPlayed = totals.gamesPlayed
+        self.wins = totals.wins
+        self.losses = totals.losses
+        self.fgm = self.per_poss(stat=totals.fgm, possessions=totals.possessions)
+        self.fga = self.per_poss(stat=totals.fga, possessions=totals.possessions)
+        self.fgpct = totals.fgm / totals.fga
+        self.fg3m = self.per_poss(stat=totals.fg3m, possessions=totals.possessions)
+        self.fg3a = self.per_poss(stat=totals.fg3a, possessions=totals.possessions)
+        self.fg3pct = totals.fg3m / totals.fg3a
+        self.ftm = self.per_poss(stat=totals.ftm, possessions=totals.possessions)
+        self.fta = self.per_poss(stat=totals.fta, possessions=totals.possessions)
+        self.ftpct = totals.ftm / totals.fta
+        self.offensiveRebounds = self.per_poss(stat=totals.offensiveRebounds, possessions=totals.possessions)
+        self.defensiveRebounds = self.per_poss(stat=totals.defensiveRebounds, possessions=totals.possessions)
+        self.rebounds = self.per_poss(stat=totals.rebounds, possessions=totals.possessions)
+        self.assists = self.per_poss(stat=totals.assists, possessions=totals.possessions)
+        self.turnovers = self.per_poss(stat=totals.turnovers, possessions=totals.possessions)
+        self.steals = self.per_poss(stat=totals.steals, possessions=totals.possessions)
+        self.blocks = self.per_poss(stat=totals.blocks, possessions=totals.possessions)
+        self.blocks_against = self.per_poss(stat=totals.blocks_against, possessions=totals.possessions)
+        self.personalFouls = self.per_poss(stat=totals.personalFouls, possessions=totals.possessions)
+        self.personalFoulsDrawn = self.per_poss(stat=totals.personalFoulsDrawn, possessions=totals.possessions)
+        self.points = self.per_poss(stat=totals.points, possessions=totals.possessions)
+
+
+    def per_poss(stat, possessions):
+        return stat/possessions
