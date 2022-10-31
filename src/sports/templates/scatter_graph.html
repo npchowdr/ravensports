@@ -25,10 +25,10 @@ var curr_stat1 = "Points";
 var curr_stat2 = "Year";
 
 var player_name = document.getElementById('player_header').innerHTML;
-api_url = "http://127.0.0.1:8000/api/get_player_per_game_stats_list/" + player_name.replace(" ", "%20")
+api_url = "api/get_player_regular_season_totals_stats_list/" + player_name.replace(" ", "%20")
 
-var stat_array_y_axis = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
-var stat_array_x_axis = ["Year", "Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
+var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks"]; //name has to match name in model
+var stat_array_x_axis = ["season", "Points", "Assists", "rebounds", "steals", "blocks"];
 
 var select_stat1 = d3.select('body')
   .append('select')
@@ -101,10 +101,10 @@ const render = (data, stat1, stat2) => {
   const yValue = d => d[stat1];
 
   // Add X axis
-  if(stat2 == "Year"){
+  if(stat2 == "season"){
     var xScale = d3.scaleLinear()
         //.domain(d3.extent(data, xValue))
-        .domain([d3.min(data, d => d.Year) - 1, d3.max(data, d => d.Year)])
+        .domain([d3.min(data, d => d.season) - 1, d3.max(data, d => d.season)])
         .range([0, width-25]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -158,7 +158,7 @@ const render = (data, stat1, stat2) => {
 
 d3.json(api_url).then(function(data){
   data_arr = data.player_per_game_stats
-  //console.log(data_arr)
+  console.log(data_arr)
 
   render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default
     

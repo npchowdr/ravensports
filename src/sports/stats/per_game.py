@@ -1,8 +1,10 @@
 from mimetypes import init
 from typing import Dict
 from sports.models import PlayerRegularSeasonTotals, Player, Team
+from .stat_helper import StatHelper
 
 class PerGame:
+
     def __init__(self, totals: PlayerRegularSeasonTotals):
         self.player = totals.playerId
         self.teamId = totals.teamId
@@ -15,13 +17,13 @@ class PerGame:
         self.minutes = self.per_game(stat=totals.minutes, games=totals.gamesPlayed)
         self.fgm = self.per_game(stat=totals.fgm, games=totals.gamesPlayed)
         self.fga = self.per_game(stat=totals.fga, games=totals.gamesPlayed)
-        self.fgpct = totals.fgm / totals.fga
+        self.fgpct = StatHelper.get_percentage(totals.fgm,totals.fga)
         self.fg3m = self.per_game(stat=totals.fg3m, games=totals.gamesPlayed)
         self.fg3a = self.per_game(stat=totals.fg3a, games=totals.gamesPlayed)
-        self.fg3pct = totals.fg3m / totals.fg3a
+        self.fg3pct = StatHelper.get_percentage(totals.fg3m, totals.fg3a)
         self.ftm = self.per_game(stat=totals.ftm, games=totals.gamesPlayed)
         self.fta = self.per_game(stat=totals.fta, games=totals.gamesPlayed)
-        self.ftpct = totals.ftm / totals.fta
+        self.ftpct = StatHelper.get_percentage(totals.ftm,totals.fta)
         self.offensiveRebounds = self.per_game(stat=totals.offensiveRebounds, games=totals.gamesPlayed)
         self.defensiveRebounds = self.per_game(stat=totals.defensiveRebounds, games=totals.gamesPlayed)
         self.rebounds = self.per_game(stat=totals.rebounds, games=totals.gamesPlayed)
@@ -47,13 +49,13 @@ class PerGame:
         self.minutes = self.per_game(stat=totals['minutes'], games=totals['gamesPlayed'])
         self.fgm = self.per_game(stat=totals['fgm'], games=totals['gamesPlayed'])
         self.fga = self.per_game(stat=totals['fga'], games=totals['gamesPlayed'])
-        self.fgpct = round(totals['fgm'] / totals['fga'], 2)
+        self.fgpct = StatHelper.get_percentage(totals['fgm'], totals['fga'])
         self.fg3m = self.per_game(stat=totals['fg3m'], games=totals['gamesPlayed'])
         self.fg3a = self.per_game(stat=totals['fg3a'], games=totals['gamesPlayed'])
-        self.fg3pct = round(totals['fg3m'] / totals['fg3a'], 2)
+        self.fg3pct = StatHelper.get_percentage(totals['fg3m'], totals['fg3a'])
         self.ftm = self.per_game(stat=totals['ftm'], games=totals['gamesPlayed'])
         self.fta = self.per_game(stat=totals['fta'], games=totals['gamesPlayed'])
-        self.ftpct = round(totals['ftm'] / totals['fta'], 2)
+        self.ftpct = StatHelper.get_percentage(totals['ftm'], totals['fta'])
         self.offensiveRebounds = self.per_game(stat=totals['offensiveRebounds'], games=totals['gamesPlayed'])
         self.defensiveRebounds = self.per_game(stat=totals['defensiveRebounds'], games=totals['gamesPlayed'])
         self.rebounds = self.per_game(stat=totals['rebounds'], games=totals['gamesPlayed'])
