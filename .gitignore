@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+#Migrations
+src/sports/migrations/
+
 # Distribution / packaging
 .Python
 build/
@@ -109,6 +112,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+../djangoenv/
+djangoenv/
 
 # Spyder project settings
 .spyderproject

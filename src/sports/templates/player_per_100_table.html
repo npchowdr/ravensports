@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+th, td{
+  padding:3px;
+}
+</style>
+
+<h1>Player Per Game Stats</h1>
+
+<form class="d-flex" method=POST action="{% url 'player_per_game_stats' %}">
+    {% csrf_token %}
+    <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
+    <button type="submit">Search</button>
+</form>
+
+<a href="http://127.0.0.1:8000/player_per_game_stats">Per Game</a>
+<a href="http://127.0.0.1:8000/player_advanced_stats">Advanced</a>
+
+{% if searched %}
+    <h2>You Searched For...</h2>
+{% else %}
+    <h2>Search For A Player...</h2>
+{% endif %}
+
+<h2>{{ player_obj }}</h2>
+
+<table>
+    <tr>
+        <th>Year</th>
+        <th>Age</th>
+        <th>POS</th>
+        <th>Tm</th>
+        <th>GP</th>
+        <th>MP</th>
+        <th>FGM</th>
+        <th>FGA</th>
+        <th>FG%</th>
+        <th>3PM</th>
+        <th>3PA</th>
+        <th>3P%</th>
+        <th>FTM</th>
+        <th>FTA</th>
+        <th>FT%</th>
+        <th>ORB</th>
+        <th>DRB</th>
+        <th>TRB</th>
+        <th>AST</th>
+        <th>STL</th>
+        <th>BLK</th>
+        <th>BLKA</th>
+        <th>TO</th>
+        <th>PF</th>
+        <th>PFD</th>
+        <th>PTS</th>
+        <th>+/-</th>
+    </tr>
+    {% for season in stat_list %}
+    <tr>
+        <!-- <td> {{season}} </td> -->
+        <td>{{season.season}}</td>
+        <td>{{season.age}}</td>
+        <td>{{player_obj.position}}</td>
+        <td>{{season.teamId}}</td>
+        <td>{{season.gamesPlayed}}</td>
+        <td>{{season.minutes}}</td>
+        <td>{{season.fgm}}</td>
+        <td>{{season.fga}}</td>
+        <td>{{season.fgpct}}</td>
+        <td>{{season.fg3m}}</td>
+        <td>{{season.fg3a}}</td>
+        <td>{{season.fg3pct}}</td>
+        <td>{{season.ftm}}</td>
+        <td>{{season.fta}}</td>
+        <td>{{season.ftpct}}</td>
+        <td>{{season.offensiveRebounds}}</td>
+        <td>{{season.defensiveRebounds}}</td>
+        <td>{{season.rebounds}}</td>
+        <td>{{season.assists}}</td>
+        <td>{{season.steals}}</td>
+        <td>{{season.blocks}}</td>
+        <td>{{season.blocks_against}}</td>
+        <td>{{season.turnovers}}</td>
+        <td>{{season.personalFouls}}</td>
+        <td>{{season.personalFoulsDrawn}}</td>
+        <td>{{season.points}}</td>
+        <td>{{season.plusMinus}}</td>
+    </tr>
+
+    {% endfor %}
+</table>
+{% endblock %}
