@@ -9,6 +9,10 @@ from .stats.per_game import PerGame
 from .stats.per_minute import PerMinute
 from .stats.per_poss import PerPossession
 from rest_framework.decorators import api_view
+import logging
+from django.db import connection
+
+logger = logging.getLogger(__name__)
 
 def home(request):
     #api request
@@ -147,7 +151,10 @@ def scatter_graph(request):
 
 # -------------------
 def season_scatter_graph(request):
-    season = 2021
+    season = '2021-22'
+    #player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
+    #player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season).prefetch_related('playerId')
+    #raw_query = PlayerRegularSeasonTotals.objects.raw('SELECT * FROM sports_playerregularseasontotals FULL OUTER JOIN public.sports_player ON "sports_playerregularseasontotals"."playerId_id" = sports_player.id WHERE season=%s', [season])
 
     if request.method == "POST":
         searched = request.POST.get('searched')
@@ -185,15 +192,9 @@ def get_player_regular_season_totals_stats_list(request, player_slug='kobe-bryan
 
 # -------------------
 def get_all_players_stats_for_season_list(request, season='2021-22'):
-    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
+    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)    
     player_total_serializer = PlayerRegularSeasonTotalsSerializer(player_total_stats, many=True)
     
     return JsonResponse({'regular_season_totals': player_total_serializer.data})
-       
-# -------------------
-def get_player_regular_season_totals(request, season='2021-22'):
-    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
-    player_total_serializer = PlayerRegularSeasonTotalsSerializer(player_total_stats, many=True)
-    
-    return JsonResponse({'regular_season_totals': player_total_serializer.data})
+
 

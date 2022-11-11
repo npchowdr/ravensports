@@ -21,15 +21,17 @@
 <script>
 
 var data_arr;
-var curr_stat1 = "Points";
-var curr_stat2 = "Assists";
+var curr_stat1 = "points";
+var curr_stat2 = "assists";
 
 var season_year = document.getElementById('player_header').innerHTML;
-api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/" + + season_year.replace(" ", "%20")
-console.log(api_url)
+api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/" + season_year
 
-var stat_array_y_axis = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
-var stat_array_x_axis = ["Assists", "Points", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
+// var joined_obj = document.getElementById('joined_obj').innerHTML;
+// console.log(joined_obj)
+
+var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks"]; //name has to match name in model
+var stat_array_x_axis = ["assists", "points", "rebounds", "steals", "blocks"]; //name has to match name in model
 
 var select_stat1 = d3.select('body')
   .append('select')
@@ -102,16 +104,6 @@ const render = (data, stat1, stat2) => {
   const yValue = d => d[stat1];
 
   // Add X axis
-  if(stat2 == "Year"){
-    var xScale = d3.scaleLinear()
-        //.domain(d3.extent(data, xValue))
-        .domain([d3.min(data, d => d.Year) - 1, d3.max(data, d => d.Year)])
-        .range([0, width-25]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
-      
-  } else {
     var xScale = d3.scaleLinear()
         //.domain(d3.extent(data, xValue))
         .domain([0, d3.max(data, d => d[stat2]) + 2])
@@ -119,7 +111,6 @@ const render = (data, stat1, stat2) => {
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
-  }
 
     // Add Y axis
     var yScale = d3.scaleLinear()
@@ -145,7 +136,7 @@ const render = (data, stat1, stat2) => {
       .attr('class', 'label')
       .attr('x', xScale(xValue(d))-25)
       .attr('y', yScale(yValue(d))+20)
-      .text(d['Player']);//.text(xValue(d) + ", " + yValue(d));
+      .text(d['playerId'].playerFirstName + " " + d['playerId'].playerLastName);
     })
    
     // Add Graph title
@@ -157,9 +148,8 @@ const render = (data, stat1, stat2) => {
 }
 
 d3.json(api_url).then(function(data){
-  console.log(data)
-  data_arr = data.player_per_game_stats
-  //console.log(data_arr)
+  data_arr = data.regular_season_totals
+  console.log(data_arr)
 
   render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default
     

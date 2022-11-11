@@ -169,7 +169,7 @@ const render = (data, stat1, stat2) => {
         .attr('x', xScale(xValue(d))-25)
         .attr('y', yScale(yValue(d))+20)
 
-        .text(xValue(d) + ", " + yValue(d));
+        .text(xValue(d) + ", " + yValue(d) + ", " + d.season);
       })
     }
    
