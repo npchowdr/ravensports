@@ -3,8 +3,7 @@
 <body>
 
 <script src="http://d3js.org/d3.v7.js"></script>
-<!-- Create a div where the graph will take place -->
-<!-- <div id="my_dataviz"></div> -->
+
 <script>
 
 var data_arr;
@@ -14,8 +13,19 @@ var curr_stat2 = "assists";
 var season_year = "2021-22"
 base_api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/"
 
-var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks"]; //name has to match name in model
-var stat_array_x_axis = ["assists", "points", "rebounds", "steals", "blocks"]; //name has to match name in model
+var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks", 
+        'possessions', 'gamesPlayed', 'wins', 'losses', 'minutes','fgm', 'fga',
+        'fg3m', 'fg3a', 'ftm', 'fta', 'offensiveRebounds', 'defensiveRebounds',
+        'turnovers', 'blocks_against', 'personalFouls','personalFoulsDrawn', 
+         'doubleDoubles', 'tripleDoubles',]; //name has to match name in model 
+
+var stat_array_x_axis = ["assists", "points", "rebounds", "steals", "blocks", 
+        'possessions', 'gamesPlayed', 'wins', 'losses', 'minutes','fgm', 'fga',
+        'fg3m', 'fg3a', 'ftm', 'fta', 'offensiveRebounds', 'defensiveRebounds',
+        'turnovers', 'blocks_against', 'personalFouls','personalFoulsDrawn', 
+         'doubleDoubles', 'tripleDoubles',]; //'plusMinus',
+
+//plusMinus needs a four quadrant graph
 
 let get_season_list = () => {
   curr_year = new Date().getFullYear()
