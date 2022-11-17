@@ -7,8 +7,6 @@
 </style>
 <body>
 
-<h1 id="player_header">{{ player }}</h1>
-
 <form class="d-flex" method=POST action="{% url 'scatter_graph' %}">
   {% csrf_token %}
   <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
@@ -17,14 +15,15 @@
 
 <script src="http://d3js.org/d3.v7.js"></script>
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
+<!-- <div id="my_dataviz"></div> -->
+
 <script>
 
 var data_arr;
 var curr_stat1 = "points";
 var curr_stat2 = "season";
 
-var player_name = document.getElementById('player_header').innerHTML;
+var player_name = "{{ player }}" //data passed from django
 api_url = "api/get_player_regular_season_totals_stats_list/" + player_name.replace(" ", "%20")
 
 var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks"]; //name has to match name in model
