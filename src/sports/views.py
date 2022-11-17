@@ -36,6 +36,10 @@ def home(request):
     return render(request, 'index.html', {'api': api})
 
 # -------------------
+def nba_home(request):
+    return render(request, 'nba_home.html')
+
+# -------------------
 def player_per_game_stats(request):
     # get all
     # all_per_game_stats = PlayerPerGameStats.objects.all()
@@ -153,28 +157,31 @@ def scatter_graph(request):
 def season_scatter_graph(request):
     season = '2021-22'
     #player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
-    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season).prefetch_related('playerId')
+    #player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season).prefetch_related('playerId')
     #raw_query = PlayerRegularSeasonTotals.objects.raw('SELECT * FROM sports_playerregularseasontotals FULL OUTER JOIN public.sports_player ON "sports_playerregularseasontotals"."playerId_id" = sports_player.id WHERE season=%s', [season])
 
-    player_season_list = []
-    for player_season in player_total_stats:
-        player_season_list.append(
-            {'id':player_season.id, 'season':player_season.season, 'age':player_season.age, 'possessions':player_season.possessions,
-             'gamesPlayed':player_season.gamesPlayed, 'wins':player_season.wins, 'losses':player_season.losses, 'minutes':player_season.minutes,
-             'fgm':player_season.fgm, 'fga':player_season.fga, 'fg3m':player_season.fg3m, 'fg3a':player_season.fg3a, 'ftm':player_season.ftm,
-             'fta':player_season.fta, 'offensiveRebounds':player_season.offensiveRebounds, 'defensiveRebounds':player_season.defensiveRebounds,
-             'rebounds':player_season.rebounds, 'assists':player_season.assists, 'turnovers':player_season.turnovers, 'steals':player_season.steals,
-             'blocks':player_season.blocks, 'blocks_against':player_season.blocks_against, 'personalFouls':player_season.personalFouls,
-             'personalFoulsDrawn':player_season.personalFoulsDrawn, 'points':player_season.points, 'plusMinus':player_season.plusMinus,
-             'doubleDoubles':player_season.doubleDoubles, 'tripleDoubles':player_season.tripleDoubles, 'playerId':player_season.playerId,
-             'teamId':player_season.teamId, 'playerFirstName':player_season.playerId.playerFirstName, 'playerLastName':player_season.playerId.playerLastName}
-        )
+    # player_season_list = []
+    # for player_season in player_total_stats:
+    #     player_season_list.append(
+    #         {'id':player_season.id, 'season':player_season.season, 'age':player_season.age, 'possessions':player_season.possessions,
+    #          'gamesPlayed':player_season.gamesPlayed, 'wins':player_season.wins, 'losses':player_season.losses, 'minutes':player_season.minutes,
+    #          'fgm':player_season.fgm, 'fga':player_season.fga, 'fg3m':player_season.fg3m, 'fg3a':player_season.fg3a, 'ftm':player_season.ftm,
+    #          'fta':player_season.fta, 'offensiveRebounds':player_season.offensiveRebounds, 'defensiveRebounds':player_season.defensiveRebounds,
+    #          'rebounds':player_season.rebounds, 'assists':player_season.assists, 'turnovers':player_season.turnovers, 'steals':player_season.steals,
+    #          'blocks':player_season.blocks, 'blocks_against':player_season.blocks_against, 'personalFouls':player_season.personalFouls,
+    #          'personalFoulsDrawn':player_season.personalFoulsDrawn, 'points':player_season.points, 'plusMinus':player_season.plusMinus,
+    #          'doubleDoubles':player_season.doubleDoubles, 'tripleDoubles':player_season.tripleDoubles, 'playerId':player_season.playerId,
+    #          'teamId':player_season.teamId, 'playerFirstName':player_season.playerId.playerFirstName,
+    #          'playerLastName':player_season.playerId.playerLastName}
+    #     )
+    # print(player_season_list)
 
     if request.method == "POST":
         searched = request.POST.get('searched')
         return render(request, 'season_scatter_graph.html', {'season': searched, 'searched': searched})
     else:
         return render(request, 'season_scatter_graph.html', {'season': season})
+        #return render(request, 'season_scatter_graph.html', {'season': season, 'player_season_list': player_season_list})
 
 # -------------------
 # def season_scatter_graph_advanced(request):

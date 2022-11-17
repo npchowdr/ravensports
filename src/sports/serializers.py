@@ -11,7 +11,7 @@ class PlayerSerializer(serializers.ModelSerializer):
                  'rosterStatus', 'fromYear', 'toYear']
 
 class PlayerRegularSeasonTotalsSerializer(serializers.ModelSerializer):
-    #playerId = PlayerSerializer(many=False, read_only=True)
+    playerId = PlayerSerializer(many=False, read_only=True)
     class Meta:
         model = PlayerRegularSeasonTotals
         fields = ['id', 'season', 'age', 'possessions', 'gamesPlayed', 'wins', 'losses',
@@ -19,10 +19,11 @@ class PlayerRegularSeasonTotalsSerializer(serializers.ModelSerializer):
         'rebounds', 'assists', 'turnovers', 'steals', 'blocks', 'blocks_against', 'personalFouls',
         'personalFoulsDrawn', 'points', 'plusMinus', 'doubleDoubles', 'tripleDoubles', 'playerId', 'teamId']
 
+
 # class PlayerSeasonSerializer(serializers.ModelSerializer):
-#     #playerId = PlayerSerializer(many=False, read_only=True)
+#     playerId = PlayerSerializer(many=False, read_only=True)
 #     class Meta:
-#         model = PlayerSeason
+#         #model = PlayerSeason
 #         fields = ['id', 'season', 'age', 'possessions', 'gamesPlayed', 'wins', 'losses',
 #         'minutes','fgm', 'fga', 'fg3m', 'fg3a', 'ftm', 'fta', 'offensiveRebounds', 'defensiveRebounds',
 #         'rebounds', 'assists', 'turnovers', 'steals', 'blocks', 'blocks_against', 'personalFouls',
