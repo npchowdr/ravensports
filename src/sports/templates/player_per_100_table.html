@@ -9,16 +9,16 @@ th, td{
 }
 </style>
 
-<h1>Player Per Game Stats</h1>
+<h1>Player Per 100 Stats</h1>
 
-<form class="d-flex" method=POST action="{% url 'player_per_game_stats' %}">
+<form class="d-flex" method=POST action="{% url 'player_per_100_stats' %}">
     {% csrf_token %}
     <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
     <button type="submit">Search</button>
 </form>
 
 <a href="http://127.0.0.1:8000/player_per_game_stats">Per Game</a>
-<a href="http://127.0.0.1:8000/player_advanced_stats">Advanced</a>
+<a href="http://127.0.0.1:8000/player_per_36_stats">Per 36 mins</a>
 
 {% if searched %}
     <h2>You Searched For...</h2>
@@ -35,7 +35,6 @@ th, td{
         <th>POS</th>
         <th>Tm</th>
         <th>GP</th>
-        <th>MP</th>
         <th>FGM</th>
         <th>FGA</th>
         <th>FG%</th>
@@ -66,7 +65,6 @@ th, td{
         <td>{{player_obj.position}}</td>
         <td>{{season.teamId}}</td>
         <td>{{season.gamesPlayed}}</td>
-        <td>{{season.minutes}}</td>
         <td>{{season.fgm}}</td>
         <td>{{season.fga}}</td>
         <td>{{season.fgpct}}</td>

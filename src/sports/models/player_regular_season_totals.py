@@ -3,8 +3,8 @@ from .player import Player
 from .team import Team
 
 class PlayerRegularSeasonTotals(models.Model):
-    playerId = models.ForeignKey(Player, on_delete=models.CASCADE)
-    teamId = models.ForeignKey(Team, on_delete=models.CASCADE)
+    playerId = models.ForeignKey(Player, related_name="player", on_delete=models.CASCADE)
+    teamId = models.ForeignKey(Team, related_name="team", on_delete=models.CASCADE)
     season = models.CharField(max_length=20)
     age = models.IntegerField(null=True)
     possessions = models.IntegerField(null=True)
@@ -33,3 +33,6 @@ class PlayerRegularSeasonTotals(models.Model):
     doubleDoubles = models.IntegerField(null=True)
     tripleDoubles = models.IntegerField(null=True)
     objects = models.Manager()
+
+    def __str__(self):
+        return str(self.playerId) + " - " + self.season

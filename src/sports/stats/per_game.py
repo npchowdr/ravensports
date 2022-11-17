@@ -6,7 +6,7 @@ from .stat_helper import StatHelper
 class PerGame:
 
     def __init__(self, totals: PlayerRegularSeasonTotals):
-        self.player = totals.playerId
+        self.playerId = totals.playerId
         self.teamId = totals.teamId
         self.season = totals.season
         self.age = totals.age
@@ -38,7 +38,7 @@ class PerGame:
         self.plusMinus = self.per_game(stat=totals.points, games=totals.gamesPlayed)
 
     def __init__(self, totals: Dict):
-        self.player = totals['playerId_id']
+        self.playerId = totals['playerId_id']
         self.teamId = Team.objects.filter(id=totals['teamId_id']).get().abbreviation
         self.season = totals['season']
         self.age = totals['age']

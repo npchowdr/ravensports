@@ -7,8 +7,6 @@
 </style>
 <body>
 
-<h1 id="player_header">{{ player }}</h1>
-
 <form class="d-flex" method=POST action="{% url 'scatter_graph' %}">
   {% csrf_token %}
   <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
@@ -17,18 +15,19 @@
 
 <script src="http://d3js.org/d3.v7.js"></script>
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
+<!-- <div id="my_dataviz"></div> -->
+
 <script>
 
 var data_arr;
-var curr_stat1 = "Points";
-var curr_stat2 = "Year";
+var curr_stat1 = "points";
+var curr_stat2 = "season";
 
-var player_name = document.getElementById('player_header').innerHTML;
+var player_name = "{{ player }}" //data passed from django
 api_url = "api/get_player_regular_season_totals_stats_list/" + player_name.replace(" ", "%20")
 
 var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks"]; //name has to match name in model
-var stat_array_x_axis = ["season", "Points", "Assists", "rebounds", "steals", "blocks"];
+var stat_array_x_axis = ["season", "points", "assists", "rebounds", "steals", "blocks"];
 
 var select_stat1 = d3.select('body')
   .append('select')
@@ -102,13 +101,13 @@ const render = (data, stat1, stat2) => {
 
   // Add X axis
   if(stat2 == "season"){
-    var xScale = d3.scaleLinear()
-        //.domain(d3.extent(data, xValue))
-        .domain([d3.min(data, d => d.season) - 1, d3.max(data, d => d.season)])
-        .range([0, width-25]);
+    var xScale = d3.scaleBand()
+                  .domain(data.map(xValue))
+                  .range([0, width])
+
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+        .call(d3.axisBottom(xScale));
       
   } else {
     var xScale = d3.scaleLinear()
@@ -117,7 +116,7 @@ const render = (data, stat1, stat2) => {
         .range([0, width]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
   }
 
     // Add Y axis
@@ -128,7 +127,19 @@ const render = (data, stat1, stat2) => {
         .call(d3.axisLeft(yScale));
 
     // Add dots
-    svg.append('g')
+    if(stat2 == "season"){
+      svg.append('g')
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(xValue(d)) + xScale.bandwidth()/2)
+        .attr("cy", d => yScale(yValue(d)))
+        .attr("r", 5)
+        .style("fill", "#000000")
+
+    } else {
+      svg.append('g')
         .selectAll("circle")
         .data(data)
         .enter()
@@ -137,16 +148,29 @@ const render = (data, stat1, stat2) => {
         .attr("cy", d => yScale(yValue(d)))
         .attr("r", 5)
         .style("fill", "#000000")
+    }
+    
  
     // Add label for dots
-    data.forEach ( d => {
-      svg.append("text")
-      .attr('class', 'label')
-      .attr('x', xScale(xValue(d))-25)
-      .attr('y', yScale(yValue(d))+20)
+    if(stat2 == "season"){
+      data.forEach ( d => {
+        svg.append("text")
+        .attr('class', 'label')
+        .attr('x', xScale(xValue(d)) + (xScale.bandwidth()/2) - 30)
+        .attr('y', yScale(yValue(d))+20)
 
-      .text(xValue(d) + ", " + yValue(d));
-    })
+        .text(xValue(d) + ", " + yValue(d));
+      })
+    } else {
+      data.forEach ( d => {
+        svg.append("text")
+        .attr('class', 'label')
+        .attr('x', xScale(xValue(d))-25)
+        .attr('y', yScale(yValue(d))+20)
+
+        .text(xValue(d) + ", " + yValue(d) + ", " + d.season);
+      })
+    }
    
     // Add Graph title
     svg.append('text')
@@ -160,8 +184,10 @@ d3.json(api_url).then(function(data){
   data_arr = data.player_per_game_stats
   console.log(data_arr)
 
-  render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default
-    
+  // data_arr = "{{stat_list}}";
+  // console.log(data_arr)
+
+  render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default    
 });
 
 

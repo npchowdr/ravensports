@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
-  label{
-    font: 14px sans-serif;
-  }
-</style>
 <body>
-
-<h1 id="player_header">{{ season }}</h1>
-
-<form class="d-flex" method=POST action="{% url 'scatter_graph' %}">
-  {% csrf_token %}
-  <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
-  <button type="submit">Search</button>
-</form>
 
 <script src="http://d3js.org/d3.v7.js"></script>
 <!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
+<!-- <div id="my_dataviz"></div> -->
 <script>
 
 var data_arr;
-var curr_stat1 = "Points";
-var curr_stat2 = "Assists";
+var curr_stat1 = "points";
+var curr_stat2 = "assists";
 
-var season_year = document.getElementById('player_header').innerHTML;
-api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/" + + season_year.replace(" ", "%20")
-console.log(api_url)
+var season_year = "2021-22"
+base_api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/"
 
-var stat_array_y_axis = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
-var stat_array_x_axis = ["Assists", "Points", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
+var stat_array_y_axis = ["points", "assists", "rebounds", "steals", "blocks"]; //name has to match name in model
+var stat_array_x_axis = ["assists", "points", "rebounds", "steals", "blocks"]; //name has to match name in model
+
+let get_season_list = () => {
+  curr_year = new Date().getFullYear()
+  year = 1996
+  suffix = 97
+
+  years = []
+  while(year < curr_year){
+    year_string = String(year).concat("-", String(suffix).slice(-2))
+    console.log(year_string)
+    years.push(year_string)
+    year++
+    suffix++
+  }
+
+  return years.reverse()
+} 
 
 var select_stat1 = d3.select('body')
   .append('select')
@@ -75,9 +78,34 @@ function onChangeStat2() {
   render(data_arr, curr_stat1, curr_stat2)
 };
 
+var select_stat3 = d3.select('body')
+  .append('select')
+  	.attr('class','select')
+    .on('change',onChangeStat3)
+
+var options3 = select_stat3
+  .selectAll('option')
+	.data(get_season_list).enter()
+	.append('option')
+		.text(function (d) { return d; });
+
+function onChangeStat3() {
+  selections = d3.selectAll('select').nodes()
+  second_select = selections[2]
+	season_year = second_select.value //get value from second select node
+  season_url = base_api_url + season_year
+
+  // remove old graph
+  var s = d3.selectAll('svg');
+  s.remove()  
+
+  fetch_and_render_data(season_url)
+  //render(data_arr, curr_stat1, curr_stat2)
+};
+
 const render = (data, stat1, stat2) => {
 
-  const title =  stat1 + ' VS ' + stat2 + ' ' + season_year
+  const title =  stat1 + ' vs ' + stat2 + ' ' + season_year
 
   var margin = {top: 20, right: 20, bottom: 50, left: 50},
     width = 960 - margin.left - margin.right,
@@ -102,24 +130,12 @@ const render = (data, stat1, stat2) => {
   const yValue = d => d[stat1];
 
   // Add X axis
-  if(stat2 == "Year"){
     var xScale = d3.scaleLinear()
-        //.domain(d3.extent(data, xValue))
-        .domain([d3.min(data, d => d.Year) - 1, d3.max(data, d => d.Year)])
-        .range([0, width-25]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
-      
-  } else {
-    var xScale = d3.scaleLinear()
-        //.domain(d3.extent(data, xValue))
-        .domain([0, d3.max(data, d => d[stat2]) + 2])
+        .domain([0, d3.max(data, d => d[stat2]) + 30])
         .range([0, width]);
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
-  }
 
     // Add Y axis
     var yScale = d3.scaleLinear()
@@ -145,7 +161,7 @@ const render = (data, stat1, stat2) => {
       .attr('class', 'label')
       .attr('x', xScale(xValue(d))-25)
       .attr('y', yScale(yValue(d))+20)
-      .text(d['Player']);//.text(xValue(d) + ", " + yValue(d));
+      .text(d['playerId'].playerFirstName + " " + d['playerId'].playerLastName);
     })
    
     // Add Graph title
@@ -156,15 +172,16 @@ const render = (data, stat1, stat2) => {
       .text(title);
 }
 
-d3.json(api_url).then(function(data){
-  console.log(data)
-  data_arr = data.player_per_game_stats
-  //console.log(data_arr)
+function fetch_and_render_data(url){
+  d3.json(url).then(function(data){
+    data_arr = data.regular_season_totals
+    console.log(data_arr)
 
-  render(data_arr, curr_stat1, curr_stat2); //AD PPG by year default
-    
-});
+    render(data_arr, curr_stat1, curr_stat2);
+  });
+}
 
+fetch_and_render_data(base_api_url+"2021-22")
 
 
 </script>

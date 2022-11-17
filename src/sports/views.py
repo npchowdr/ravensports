@@ -9,6 +9,10 @@ from .stats.per_game import PerGame
 from .stats.per_minute import PerMinute
 from .stats.per_poss import PerPossession
 from rest_framework.decorators import api_view
+import logging
+from django.db import connection
+
+logger = logging.getLogger(__name__)
 
 def home(request):
     #api request
@@ -30,6 +34,10 @@ def home(request):
         api = "Error..."
 
     return render(request, 'index.html', {'api': api})
+
+# -------------------
+def nba_home(request):
+    return render(request, 'nba_home.html')
 
 # -------------------
 def player_per_game_stats(request):
@@ -96,21 +104,36 @@ def player_per_100_stats(request):
         return render(request, 'player_per_100_table.html', {'player_stats_object': player_stats_object, 'player': player, 
         'player_obj': player_object, 'stat_list': stat_list})
 
-# # -------------------
-# def player_advanced_stats(request):
-#     player = 'Kobe Bryant*'
-#     player_stats_object = PlayerAdvancedStats.objects.filter(Player=player)  # HOFers have * next to name
+# -------------------
+def player_per_36_stats(request):
+    player = 'Kobe Bryant'
+    player_slug = 'kobe-bryant'
 
-#     if request.method == "POST":
-#         searched = request.POST.get('searched')
-#         player_stats_object = PlayerAdvancedStats.objects.filter(Player=searched)
+    player_object = Player.objects.filter(playerSlug=player_slug).get()
+    player_stats_object = PlayerRegularSeasonTotals.objects.filter(playerId=player_object.id)
+    stat_list = []
 
-#         return render(request, 'player_advanced_table.html', {'player_stats_object': player_stats_object,
-#                                                              'player': searched, 'searched': searched})
+    if request.method == "POST":
+        searched = request.POST.get('searched')
+        slug = searched.strip().lower().replace(" ", "-").replace("'", "")
+        player_object = Player.objects.filter(playerSlug=slug).get()
+        player_stats_object = PlayerRegularSeasonTotals.objects.filter(playerId=player_object.id)
 
-#     else:
-#         return render(request, 'player_advanced_table.html', {'player_stats_object': player_stats_object,
-#                                                              'player': player})
+        stat_list = []
+        for player_season in player_stats_object.values():
+            per_min_stats = PerMinute(player_season, mins=36)
+            stat_list.append(per_min_stats)
+
+        return render(request, 'player_per_36_table.html', {'player_stats_object': player_stats_object, 'searched': searched,
+                                             'player_obj': player_object, 'stat_list': stat_list})
+
+    else:
+        for player_season in player_stats_object.values():
+            per_min_stats = PerMinute(player_season, mins=36)
+            stat_list.append(per_min_stats)
+
+        return render(request, 'player_per_36_table.html', {'player_stats_object': player_stats_object, 'player': player, 
+        'player_obj': player_object, 'stat_list': stat_list})
 
 # -------------------
 def scatter_graph(request):
@@ -131,16 +154,36 @@ def scatter_graph(request):
         return render(request, 'scatter_graph.html', {'player': player_slug, 'stat_list': per_game_stat_list})
 
 # -------------------
-# def season_scatter_graph(request):
-#     season = 2021
+def season_scatter_graph(request):
+    season = '2021-22'
+    #player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
+    #player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season).prefetch_related('playerId')
+    #raw_query = PlayerRegularSeasonTotals.objects.raw('SELECT * FROM sports_playerregularseasontotals FULL OUTER JOIN public.sports_player ON "sports_playerregularseasontotals"."playerId_id" = sports_player.id WHERE season=%s', [season])
 
-#     if request.method == "POST":
-#         searched = request.POST.get('searched')
-#         return render(request, 'season_scatter_graph.html', {'season': searched, 'searched': searched})
-#     else:
-#         return render(request, 'season_scatter_graph.html', {'season': season})
+    # player_season_list = []
+    # for player_season in player_total_stats:
+    #     player_season_list.append(
+    #         {'id':player_season.id, 'season':player_season.season, 'age':player_season.age, 'possessions':player_season.possessions,
+    #          'gamesPlayed':player_season.gamesPlayed, 'wins':player_season.wins, 'losses':player_season.losses, 'minutes':player_season.minutes,
+    #          'fgm':player_season.fgm, 'fga':player_season.fga, 'fg3m':player_season.fg3m, 'fg3a':player_season.fg3a, 'ftm':player_season.ftm,
+    #          'fta':player_season.fta, 'offensiveRebounds':player_season.offensiveRebounds, 'defensiveRebounds':player_season.defensiveRebounds,
+    #          'rebounds':player_season.rebounds, 'assists':player_season.assists, 'turnovers':player_season.turnovers, 'steals':player_season.steals,
+    #          'blocks':player_season.blocks, 'blocks_against':player_season.blocks_against, 'personalFouls':player_season.personalFouls,
+    #          'personalFoulsDrawn':player_season.personalFoulsDrawn, 'points':player_season.points, 'plusMinus':player_season.plusMinus,
+    #          'doubleDoubles':player_season.doubleDoubles, 'tripleDoubles':player_season.tripleDoubles, 'playerId':player_season.playerId,
+    #          'teamId':player_season.teamId, 'playerFirstName':player_season.playerId.playerFirstName,
+    #          'playerLastName':player_season.playerId.playerLastName}
+    #     )
+    # print(player_season_list)
 
-# # -------------------
+    if request.method == "POST":
+        searched = request.POST.get('searched')
+        return render(request, 'season_scatter_graph.html', {'season': searched, 'searched': searched})
+    else:
+        return render(request, 'season_scatter_graph.html', {'season': season})
+        #return render(request, 'season_scatter_graph.html', {'season': season, 'player_season_list': player_season_list})
+
+# -------------------
 # def season_scatter_graph_advanced(request):
 #     season = 2021
 
@@ -168,17 +211,11 @@ def get_player_regular_season_totals_stats_list(request, player_slug='kobe-bryan
     serializer = PlayerRegularSeasonTotalsSerializer(player_stats_object, many=True)
     return JsonResponse({'player_per_game_stats': serializer.data})
 
-# # -------------------
-def get_all_players_stats_for_season_list(request, season='2021-22'):
-    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
-    player_total_serializer = PlayerRegularSeasonTotalsSerializer(player_total_stats, many=True)
-    
-    return JsonResponse({'regular_season_totals': player_total_serializer.data})
-       
 # -------------------
-def get_player_regular_season_totals(request, season='2021-22'):
-    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)
+def get_all_players_stats_for_season_list(request, season='2021-22'):
+    player_total_stats = PlayerRegularSeasonTotals.objects.filter(season=season)    
     player_total_serializer = PlayerRegularSeasonTotalsSerializer(player_total_stats, many=True)
     
     return JsonResponse({'regular_season_totals': player_total_serializer.data})
+
 
