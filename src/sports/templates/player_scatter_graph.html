@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  .label{
+    font: 10px sans-serif;
+  }
+</style>
+<body>
+
+<h1 id="player_header">{{ player }}</h1>
+
+<form class="d-flex" method=POST action="{% url 'scatter_graph' %}">
+  {% csrf_token %}
+  <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
+  <button type="submit">Search</button>
+</form>
+
+<script src="http://d3js.org/d3.v7.js"></script>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+<script>
+
+
+
+</script>
+</body>
+</html>

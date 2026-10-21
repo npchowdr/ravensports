@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  label{
+    font: 14px sans-serif;
+  }
+</style>
+<body>
+
+<h1 id="player_header">{{ season }}</h1>
+
+<form class="d-flex" method=POST action="{% url 'scatter_graph' %}">
+  {% csrf_token %}
+  <input type="search" placeholder="Search for Player" aria-label="Search" name="searched">
+  <button type="submit">Search</button>
+</form>
+
+<script src="http://d3js.org/d3.v7.js"></script>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+<script>
+
+var data_arr;
+var curr_stat_y = "Points";
+var curr_stat_x = "Assists";
+
+var season_year = document.getElementById('player_header').innerHTML;
+api_url = "http://127.0.0.1:8000/api/get_players_stats_for_season_list/" + + season_year.replace(" ", "%20")
+//console.log(api_url)
+
+const stat_array_y_axis = ["Points", "Assists", "TotalRebounds", "Steals", "Blocks"]; //name has to match name in model
+const stat_array_x_axis = ["Assists", "Points", "TotalRebounds", "Steals", "Blocks", 
+        'TrueShootingPercentage', 'ThreePointAttemptRate', 'FreeThrowAttemptRate',
+        'OffensiveReboundPercentage', 'DefensiveReboundPercentage', 'TotalReboundPercentage', 'AssistPercentage',
+        'StealPercentage', 'BlockPercentage', 'TurnoverPercentage'];
+
+const advanced_fields = ['TrueShootingPercentage', 'ThreePointAttemptRate', 'FreeThrowAttemptRate',
+        'OffensiveReboundPercentage', 'DefensiveReboundPercentage', 'TotalReboundPercentage', 'AssistPercentage',
+        'StealPercentage', 'BlockPercentage', 'TurnoverPercentage']
+
+var isAdvanced = false
+
+var select_stat1 = d3.select('body')
+  .append('select')
+  	.attr('class','select')
+    .on('change',onChangeStat1)
+
+var options1 = select_stat1
+  .selectAll('option')
+	.data(stat_array_y_axis).enter()
+	.append('option')
+		.text(function (d) { return d; });
+
+function onChangeStat1() {
+	curr_stat_y = d3.select('select').property('value')
+
+  // remove old graph
+  var s = d3.selectAll('svg');
+  s.remove()  
+
+  render(data_arr, curr_stat_x, curr_stat_y)
+};
+
+var select_stat2 = d3.select('body')
+  .append('select')
+  	.attr('class','select')
+    .on('change',onChangeStat2)
+
+var options2 = select_stat2
+  .selectAll('option')
+	.data(stat_array_x_axis).enter()
+	.append('option')
+		.text(function (d) { return d; });
+
+function onChangeStat2() {
+  selections = d3.selectAll('select').nodes()
+  second_select = selections[1]
+  curr_stat_x = second_select.value //get value from second select node
+  
+  isAdvanced = false
+  advanced_fields.forEach( field => {
+    if(field == curr_stat_x){
+        isAdvanced = true
+    }
+  })
+
+  // remove old graph
+  var s = d3.selectAll('svg');
+  s.remove()  
+
+  console.log(curr_stat_x)
+  console.log(curr_stat_y)
+
+  render(data_arr, curr_stat_x, curr_stat_y)
+};
+
+const render = (data, stat_x, stat_y) => {
+
+  data_y = data.player_per_game_stats
+  data_x = data.player_per_game_stats
+
+  const title =  stat_y + ' VS ' + stat_x + ' ' + season_year
+
+  var margin = {top: 20, right: 20, bottom: 50, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#my_dataviz")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+  var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  const xValue = d => isAdvanced ? d.player_advanced_stats[stat_x] : d.player_per_game_stats[stat_x];
+  const yValue = d => d.player_per_game_stats[stat_y];
+
+  // Add X axis
+  if(stat_x == "Year"){
+    var xScale = d3.scaleLinear()
+        //.domain(d3.extent(data, xValue))
+        .domain([d3.min(data.player_per_game_stats, d => d.Year) - 1, d3.max(data.player_per_game_stats, d => d.Year)])
+        .range([0, width-25]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+      
+  } else if(isAdvanced) { 
+
+    console.log()
+
+    var xScale = d3.scaleLinear()
+        .domain([0, d3.max(data.player_advanced_stats, d => stat_x.includes('Rate') ?  d[stat_x] : d[stat_x])])
+        .range([0, width]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+  }else {
+    var xScale = d3.scaleLinear()
+        //.domain(d3.extent(data, xValue))
+        .domain([0, d3.max(data.player_per_game_stats, d => d[stat_x]) + 2])
+        .range([0, width]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(xScale).tickFormat(d3.format("d"))); //tick format to remove comma from year
+  }
+
+    // Add Y axis
+    var yScale = d3.scaleLinear()
+        .domain([0, d3.max(data.player_per_game_stats, d => d[stat_y]) + 2])
+        .range([ height, 0]);
+    svg.append("g")
+        .call(d3.axisLeft(yScale));
+
+
+    // Add dots
+    svg.append('g')
+        .selectAll("circle")
+        .data(data.player_per_game_stats)
+        .enter()
+        .append("circle")
+        // .attr("cx", d => xScale(xValue(d)))
+        // .attr("cy", d => yScale(yValue(d)))
+        .attr("cx", function(d, i){
+            if(isAdvanced){
+                if(stat_x.includes('Rate')){
+                    return xScale(data.player_advanced_stats[i][stat_x])
+                } else {
+                    return xScale(data.player_advanced_stats[i][stat_x])
+                }     
+            } else {   
+                return xScale(d[stat_x])
+            }
+        })
+        //.attr("cy", d => yScale(yValue(d)))
+        .attr("cy", function(d){
+            return yScale(d[stat_y])
+        })
+        .attr("r", 5)
+        .style("fill", "#000000")
+ 
+    // Add label for dots
+    for(let i = 0; i < data.player_per_game_stats.length; i++){
+
+        if(isAdvanced){
+            data_x = data.player_advanced_stats[i][stat_x]
+            if(stat_x.includes('Rate')){
+                data_x = data_x
+            }
+        } else {
+            data_x = data.player_per_game_stats[i][stat_x]
+        }
+
+        data_y = data.player_per_game_stats[i][stat_y]
+
+        svg.append("text")
+        .attr('class', 'label')
+        .attr('x', xScale(data_x)-25)
+        .attr('y', yScale(data_y)+15)
+        //.text(data.player_per_game_stats[i]['Player']);
+        .text(data_x + ", " + data_y + ", " + data.player_per_game_stats[i]['Player']);
+    }
+    // data_x.forEach ( d => {
+    //   svg.append("text")
+    //   .attr('class', 'label')
+    //   .attr('x', xScale(xValue(d.player_per_game_stats))-25)
+    //   .attr('y', yScale(yValue(d).player_per_game_stats)+20)
+    //   .text(d['Player']);//.text(xValue(d) + ", " + yValue(d));
+    // })
+   
+    // Add Graph title
+    svg.append('text')
+      .attr('class', 'title')
+      .attr('y', -5)
+      .attr('x', width/2)
+      .text(title);
+  }
+
+d3.json(api_url).then(function(data){
+    data_arr = data
+    console.log(data_arr)
+
+  render(data, curr_stat_x, curr_stat_y); 
+    
+});
+
+
+
+</script>
+</body>
+</html>

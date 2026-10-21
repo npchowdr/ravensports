@@ -1,0 +1,38 @@
+from django.db import models
+from .player import Player
+from .team import Team
+
+class PlayerRegularSeasonTotals(models.Model):
+    playerId = models.ForeignKey(Player, related_name="player", on_delete=models.CASCADE)
+    teamId = models.ForeignKey(Team, related_name="team", on_delete=models.CASCADE)
+    season = models.CharField(max_length=20)
+    age = models.IntegerField(null=True)
+    possessions = models.IntegerField(null=True)
+    gamesPlayed = models.IntegerField(null=True)
+    wins = models.IntegerField(null=True)
+    losses = models.IntegerField(null=True)
+    minutes = models.FloatField(null=True)
+    fgm = models.IntegerField(null=True)
+    fga = models.IntegerField(null=True)
+    fg3m = models.IntegerField(null=True)
+    fg3a = models.IntegerField(null=True)
+    ftm = models.IntegerField(null=True)
+    fta = models.IntegerField(null=True)
+    offensiveRebounds = models.IntegerField(null=True)
+    defensiveRebounds = models.IntegerField(null=True)
+    rebounds = models.IntegerField(null=True)
+    assists = models.IntegerField(null=True)
+    turnovers = models.IntegerField(null=True)
+    steals = models.IntegerField(null=True)
+    blocks = models.IntegerField(null=True)
+    blocks_against = models.IntegerField(null=True)
+    personalFouls = models.IntegerField(null=True)
+    personalFoulsDrawn = models.IntegerField(null=True)
+    points = models.IntegerField(null=True)
+    plusMinus = models.IntegerField(null=True)
+    doubleDoubles = models.IntegerField(null=True)
+    tripleDoubles = models.IntegerField(null=True)
+    objects = models.Manager()
+
+    def __str__(self):
+        return str(self.playerId) + " - " + self.season
